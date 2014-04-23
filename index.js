@@ -1,10 +1,5 @@
 
 function makeKeyboard(elm) {
-
-  elm.Native = elm.Native || {};
-  elm.Native.Keyboard = elm.Native.Keyboard || {};
-  if (elm.Native.Keyboard.values) return elm.Native.Keyboard.values;
-
   // Duplicated from Native.Signal
   function send(node, timestep, changed) {
     var kids = node.kids;
@@ -107,7 +102,7 @@ function makeKeyboard(elm) {
 
   var lastPressed = downEvents;
 
-  return elm.Native.Keyboard.values = {
+  return {
     isDown:is,
     directions:F4(dir),
     keysDown:keysDown,
