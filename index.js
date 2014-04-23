@@ -1,116 +1,19 @@
-var cuid = require('cuid');
+var Individual = require('individual');
+var Delegator = require('dom-delegator');
 
-function makeKeyboard(options) {
-  // Duplicated from Native.Signal
-  function send(node, timestep, changed) {
-    var kids = node.kids;
-    for (var i = kids.length; i--; ) {
-      kids[i].recv(timestep, changed, node.id);
+var Keyboard = require('./keyboard.js');
+
+var keyboardCache = Individual('__FRP_KEYBOARD_CACHE@1', {});
+
+module.exports = CachedKeyboard;
+
+function CachedKeyboard() {
+    var keyboard = keyboardCache.keyboard;
+
+    if (!keyboard) {
+        var delegator = Delegator();
+        keyboard = keyboardCache.keyboard = Keyboard(delegator);
     }
-  }
 
-  var Signal = Elm.Signal.make(elm);
-  var NList = Elm.Native.List.make(elm);
-
-  var downEvents = Signal.constant(0);
-  var upEvents = Signal.constant(0);
-  var blurEvents = Signal.constant(0);
-
-  options.addListener('keydown', function down(e) {
-    options.notify(downEvents, e.keyCode);
-  }, downEvents);
-
-  options.addListener('keyup', function up(e) {
-    options.notify(upEvents, e.keyCode);
-  }, upEvents);
-
-  options.addListener('blur', function blur() {
-    options.notify(blurEvents, NList.Nil);
-  }, blurEvents);
-
-  function KeyMerge(down, up, blur) {
-    var args = [down,up,blur];
-    this.id = cuid();
-    // Ignore starting values here
-    this.value = NList.Nil;
-    this.kids = [];
-    
-    var n = args.length;
-    var count = 0;
-    var isChanged = false;
-
-    this.recv = function(timestep, changed, parentID) {
-      ++count;
-      if (changed) { 
-        // We know this a change must only be one of the following cases
-        if (parentID === down.id && !(NList.member(down.value)(this.value))) {
-          isChanged = true;
-          this.value = NList.Cons(down.value, this.value); 
-        } 
-        if (parentID === up.id) {
-          isChanged = true;
-          var notEq = function(kc) {
-            return kc !== up.value;
-          };
-          this.value = NList.filter(notEq)(this.value);
-        } 
-        if (parentID === blur.id) {
-          isChanged = true;
-          this.value = NList.Nil;
-        }
-      }
-      if (count === n) {
-        send(this, timestep, isChanged);
-        isChanged = false;
-        count = 0;
-      }
-    };
-
-    for (var i = n; i--; ) { args[i].kids.push(this); }
-
-  }
-
-  var keysDown = Signal.dropRepeats(new KeyMerge(downEvents,upEvents,blurEvents));
-
-  function keySignal(f) {
-    var signal = A2(Signal.lift, f, keysDown);
-    // must set the default number of kids to make it possible to filter
-    // these signals if they are not actually used.
-    keysDown.defaultNumberOfKids += 1;
-    signal.defaultNumberOfKids = 1;
-    var filtered = Signal.dropRepeats(signal);
-    filtered.defaultNumberOfKids = 0;
-    return filtered;
-  }
-
-  function dir(up, down, left, right) {
-    function f(ks) {
-      var x = 0, y = 0;
-      while (ks.ctor === "::") {
-        switch (ks._0) {
-          case left : --x; break;
-          case right: ++x; break;
-          case up   : ++y; break;
-          case down : --y; break;
-        }
-        ks = ks._1;
-      }
-      return { _:{}, x:x, y:y };
-    }
-    return keySignal(f);
-  }
-
-  function is(key) { return keySignal(NList.member(key)); }
-
-  var lastPressed = downEvents;
-
-  return {
-    isDown:is,
-    directions:F4(dir),
-    keysDown:keysDown,
-    lastPressed:lastPressed
-  };
-
+    return keyboard;
 }
-
-module.exports = makeKeyboard;

@@ -1,8 +1,19 @@
 var test = require('tape');
 
-var frpKeyboard = require('../index.js');
+var Keyboard = require('../index.js');
 
-test('frpKeyboard is a function', function (assert) {
-    assert.equal(typeof frpKeyboard, 'function');
+test('Keyboard is a function', function (assert) {
+    assert.equal(typeof Keyboard, 'function');
+    assert.end();
+});
+
+test('isDown', function (assert) {
+    var keyboard = Keyboard();
+    var keyCode = 50;
+
+    var keyDown = keyboard.isDown(keyCode);
+
+    assert.equal(keyDown(), false);
+
     assert.end();
 });
