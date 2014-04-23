@@ -17,15 +17,15 @@ function makeKeyboard(options) {
   var blurEvents = Signal.constant(0);
 
   options.addListener('keydown', function down(e) {
-    elm.notify(downEvents.id, e.keyCode);
+    options.notify(downEvents, e.keyCode);
   }, downEvents);
 
   options.addListener('keyup', function up(e) {
-    elm.notify(upEvents.id, e.keyCode);
+    options.notify(upEvents, e.keyCode);
   }, upEvents);
 
   options.addListener('blur', function blur() {
-    elm.notify(blurEvents.id, NList.Nil);
+    options.notify(blurEvents, NList.Nil);
   }, blurEvents);
 
   function KeyMerge(down, up, blur) {
