@@ -26,6 +26,7 @@
     "coveralls": "^2.10.0",
     "istanbul": "^0.2.7",
     "jshint": "^2.5.0",
+    "opn": "^0.1.1",
     "pre-commit": "0.0.7",
     "run-browser": "^1.3.0",
     "synthetic-dom-events": "^0.2.0",
@@ -44,7 +45,7 @@
     "jshint-pre-commit": "jshint --verbose $(git diff --cached --name-only | grep '\\.js$')",
     "jshint": "jshint --verbose .",
     "cover": "istanbul cover --report none --print detail test/index.js",
-    "view-cover": "istanbul report html && open ./coverage/index.html",
+    "view-cover": "istanbul report html && opn ./coverage/index.html",
     "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
     "phantom": "run-browser test/index.js -b | tap-spec",
     "browser": "run-browser test/index.js"
