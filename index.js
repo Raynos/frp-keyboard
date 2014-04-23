@@ -1,5 +1,5 @@
-Elm.Native.Keyboard = {};
-Elm.Native.Keyboard.make = function(elm) {
+
+function makeKeyboard(elm) {
 
   elm.Native = elm.Native || {};
   elm.Native.Keyboard = elm.Native.Keyboard || {};
@@ -116,4 +116,4 @@ Elm.Native.Keyboard.make = function(elm) {
 
 };
 
-module.exports = Elm.Native.Keyboard.make
+module.exports = makeKeyboard
