@@ -1,3 +1,4 @@
+var cuid = require('cuid');
 
 function makeKeyboard(elm) {
   // Duplicated from Native.Signal
@@ -10,7 +11,6 @@ function makeKeyboard(elm) {
 
   var Signal = Elm.Signal.make(elm);
   var NList = Elm.Native.List.make(elm);
-  var Utils = Elm.Native.Utils.make(elm);
 
   var downEvents = Signal.constant(0);
   var upEvents = Signal.constant(0);
@@ -30,7 +30,7 @@ function makeKeyboard(elm) {
 
   function KeyMerge(down, up, blur) {
     var args = [down,up,blur];
-    this.id = Utils.guid();
+    this.id = cuid();
     // Ignore starting values here
     this.value = NList.Nil
     this.kids = [];
