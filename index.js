@@ -1,6 +1,6 @@
 var cuid = require('cuid');
 
-function makeKeyboard(elm) {
+function makeKeyboard(options) {
   // Duplicated from Native.Signal
   function send(node, timestep, changed) {
     var kids = node.kids;
