@@ -18,16 +18,19 @@
   ],
   "dependencies": {
     "dom-delegator": "^7.2.0",
+    "global": "^3.0.2",
+    "individual": "^0.1.1",
     "observ": "^0.1.5"
   },
   "devDependencies": {
-    "tape": "^2.12.3",
-    "jshint": "^2.5.0",
-    "istanbul": "^0.2.7",
-    "tap-spec": "^0.1.8",
-    "pre-commit": "0.0.5",
     "coveralls": "^2.10.0",
-    "run-browser": "^1.3.0"
+    "istanbul": "^0.2.7",
+    "jshint": "^2.5.0",
+    "pre-commit": "0.0.7",
+    "run-browser": "^1.3.0",
+    "synthetic-dom-events": "^0.2.0",
+    "tap-spec": "^0.1.8",
+    "tape": "^2.12.3"
   },
   "licenses": [
     {
@@ -43,7 +46,7 @@
     "cover": "istanbul cover --report none --print detail test/index.js",
     "view-cover": "istanbul report html && open ./coverage/index.html",
     "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
-    "phantom": "run-browser test/index.js -b",
+    "phantom": "run-browser test/index.js -b | tap-spec",
     "browser": "run-browser test/index.js"
   },
   "engine": {
@@ -53,5 +56,6 @@
     "jshint-pre-commit",
     "unit-test"
   ],
+  "pre-commit.silent": true,
   "ngen-version": "4.0.1"
 }

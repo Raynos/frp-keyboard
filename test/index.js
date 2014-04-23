@@ -7,13 +7,4 @@ test('Keyboard is a function', function (assert) {
     assert.end();
 });
 
-test('isDown', function (assert) {
-    var keyboard = Keyboard();
-    var keyCode = 50;
-
-    var keyDown = keyboard.isDown(keyCode);
-
-    assert.equal(keyDown(), false);
-
-    assert.end();
-});
+require('./native.js');

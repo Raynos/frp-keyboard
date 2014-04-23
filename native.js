@@ -25,7 +25,7 @@ function NativeKeyboard(delegator) {
     return {
         isDown: isDown,
         keysDown: keysDown,
-        lastPressed: keysDown,
+        lastPressed: downEvents,
         directions: directions
     };
 
@@ -92,4 +92,6 @@ function KeysDown(down, up, blur) {
     blur(function () {
         keysDown.set([]);
     });
+
+    return keysDown;
 }
