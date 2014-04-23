@@ -32,7 +32,7 @@ function makeKeyboard(elm) {
     var args = [down,up,blur];
     this.id = cuid();
     // Ignore starting values here
-    this.value = NList.Nil
+    this.value = NList.Nil;
     this.kids = [];
     
     var n = args.length;
@@ -49,7 +49,9 @@ function makeKeyboard(elm) {
         } 
         if (parentID === up.id) {
           isChanged = true;
-          var notEq = function(kc) { return kc !== up.value };
+          var notEq = function(kc) {
+            return kc !== up.value;
+          };
           this.value = NList.filter(notEq)(this.value);
         } 
         if (parentID === blur.id) {
@@ -57,7 +59,7 @@ function makeKeyboard(elm) {
           this.value = NList.Nil;
         }
       }
-      if (count == n) {
+      if (count === n) {
         send(this, timestep, isChanged);
         isChanged = false;
         count = 0;
@@ -76,7 +78,7 @@ function makeKeyboard(elm) {
     // these signals if they are not actually used.
     keysDown.defaultNumberOfKids += 1;
     signal.defaultNumberOfKids = 1;
-    var filtered = Signal.dropRepeats(signal)
+    var filtered = Signal.dropRepeats(signal);
     filtered.defaultNumberOfKids = 0;
     return filtered;
   }
@@ -109,6 +111,6 @@ function makeKeyboard(elm) {
     lastPressed:lastPressed
   };
 
-};
+}
 
-module.exports = makeKeyboard
+module.exports = makeKeyboard;
