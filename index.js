@@ -115,3 +115,5 @@ Elm.Native.Keyboard.make = function(elm) {
   };
 
 };
+
+module.exports = Elm.Native.Keyboard.make
