@@ -16,17 +16,17 @@ function makeKeyboard(options) {
   var upEvents = Signal.constant(0);
   var blurEvents = Signal.constant(0);
 
-  elm.addListener([downEvents.id], document, 'keydown', function down(e) {
+  options.addListener('keydown', function down(e) {
     elm.notify(downEvents.id, e.keyCode);
-  });
+  }, downEvents);
 
-  elm.addListener([upEvents.id], document, 'keyup', function up(e) {
+  options.addListener('keyup', function up(e) {
     elm.notify(upEvents.id, e.keyCode);
-  });
+  }, upEvents);
 
-  elm.addListener([blurEvents.id], document, 'blur', function blur(e) {
+  options.addListener('blur', function blur() {
     elm.notify(blurEvents.id, NList.Nil);
-  });
+  }, blurEvents);
 
   function KeyMerge(down, up, blur) {
     var args = [down,up,blur];
