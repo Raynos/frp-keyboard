@@ -8,3 +8,4 @@ test('Keyboard is a function', function (assert) {
 });
 
 require('./native.js');
+require('./keyboard.js')
