@@ -15,24 +15,129 @@ An FRP implementation of Elm.Keyboard in JS
 ## Example
 
 ```js
-var frpKeyboard = require("frp-keyboard");
+var Keyboard = require("frp-keyboard");
 
-// TODO. Show example
+var keyboard = Keyboard()
+
+keyboard.wasd(function (coords) {
+  console.log('x', coords.x, 'y', coords.y)
+})
+
+// keys is an Array<Number>
+keyboard.keysDown(function (keys) {
+  console.log('keys down', keys)
+})
 ```
 
 ## Docs
 
-### `var someValue = frpKeyboard(/*arguments*/)`
+### `var keyboard = Keyboard()`
 
-<!--
-  This is a jsig notation of your interface.
-  https://github.com/Raynos/jsig
--->
 ```ocaml
-frp-keyboard := (arg: Any) => void
+import { Observ } from 'observ'
+
+type KeyCode := Number
+
+frp-keyboard := () => {
+    arrows: Observ<{ x: Number, y: Number }>,
+    wasd: Observ<{ x: Number, y: Number }>,
+    ctrl: Observ<Boolean>,
+    shift: Observ<Boolean>,
+    isDown: (keyCode: KeyCode) => Observ<Boolean>,
+    keysDown: Observ<Array<keyCode: KeyCode>>,
+    lastPressed: Observ<keyCode: KeyCode>,
+    directions: (
+        up: KeyCode, down: KeyCode, left: KeyCode, right: KeyCode
+    ) => Observ<{ x: Number, y: Number }>
+}
 ```
 
-// TODO. State what the module does.
+`Keyboard()` returns a `keyboard` object with a set of
+  observables and functions over observables.
+
+A lot of the values in `frp-keyboard` are instances of `Observ`
+  from the [`'observ'`][observ] module
+
+#### `keyboard.arrows`
+
+`keyboard.arrows` is an observable that contains the state of
+  the arrow keys as a tuple `{ x: Number, y: Number }`
+
+You can read from `keyboard.arrows` by calling it as a function
+  with an optional listener function
+
+```js
+var currentX = keyboard.arrows().x
+
+keyboard.arrows(function (tuple) {
+  console.log('x', tuple.x)
+})
+```
+
+#### `keyboard.wasd`
+
+Just like `keyboard.arrows`, it allows you to read the state of
+  the `wasd` keys instead.
+
+#### `keyboard.directions(up, down, left, right)`
+
+If you want to define your own set of direction keys you can
+  use the `directions()`. This will return an observable that
+  returns the `{ x: Number, y: Number }` tuple.
+
+```js
+var hjkl = keyboard.directions(
+  74, // j
+  75, // k
+  72, // h
+  76  // l
+)
+
+hjkl(function (coords) {
+  console.log('coords.x', coords.x, 'coords.y', coords.y)
+})
+```
+
+#### `keyboard.ctrl` and `keyboard.shift`
+
+`keyboard.ctrl` and `keyboard.shift` are observable booleans
+  that tell you whether ctrl and shift are pressed down.
+
+#### `var xDown = keyboard.keyDown(Number)`
+
+`keyDown()` returns an observable boolean that tells you whether
+  said key is down.
+
+You pass `keyDown` a numeric value that matches the `keyCode`
+
+You can find a list of what the numeric key codes are 
+  [on MDN][mdn]
+
+#### `keyboard.keysDown`
+
+`keysDown` is an observable containing an array of key codes.
+
+The `keysDown` observable represents the lists of keys that
+  are currently being pressed down.
+
+```js
+var computed = require('observ/computed')
+var Keyboard = require('frp-keyboard')
+var keyboard = Keyboard()
+
+var keysDown = keyboard.keysDown
+
+var isEnter = computed([keysDown], function (keysDown) {
+  return keysDown.some(function (keyCode) {
+    return keyCode === 13 // ENTER
+  })
+})
+```
+
+#### `keyboard.lastPressed`
+
+`lastPressed` is an observable that contains the last keycode
+  that was pressed by the user.
 
 ## Installation
 
@@ -58,3 +163,5 @@ frp-keyboard := (arg: Any) => void
   [tes]: https://ci.testling.com/uber/frp-keyboard
   [npm-png]: https://nodei.co/npm/frp-keyboard.png?stars&downloads
   [npm]: https://nodei.co/npm/frp-keyboard
+  [observ]: https://github.com/Raynos/observ
+  [mdn]: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
