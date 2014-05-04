@@ -12,6 +12,7 @@ type Coord := {
 type NativeKeyboard := {
     isDown: (keyCode: KeyCode) => Observ<Boolean>,
     keysDown: Observ<Array<keyCode: KeyCode>>,
+    keyDown: Observ<keyCode: KeyCode>,
     lastPressed: Observ<keyCode: KeyCode>,
     directions: (
         up: KeyCode, down: KeyCode, left: KeyCode, right: KeyCode
