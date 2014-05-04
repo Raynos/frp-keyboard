@@ -1,5 +1,5 @@
 var value = require('observ');
-var computed = require('observ/computed');
+// var computed = require('observ/computed');
 
 var Blurred = {};
 
@@ -30,13 +30,21 @@ function NativeKeyboard(delegator) {
     };
 
     function isDown(keyCode) {
-        return computed([keysDown], function (keys) {
-            return keys.indexOf(keyCode) !== -1;
-        });
+        var isDownNow = keysDown().indexOf(keyCode) !== -1;
+        var down = value(isDownNow)
+
+        keysDown(function (keys) {
+            var isDown = keys.indexOf(keyCode) !== -1
+            if (isDown !== down()) {
+                down.set(isDown)
+            }
+        })
+
+        return down
     }
 
     function directions(up, down, left, right) {
-        return computed([keysDown], function (keys) {
+        function computePosition(keys) {
             var x = 0;
             var y = 0;
 
@@ -54,7 +62,20 @@ function NativeKeyboard(delegator) {
             }
 
             return new Position(x, y);
-        });
+        }
+
+        var dir = value(computePosition(keysDown()))
+
+        keysDown(function (keys) {
+            var pos = computePosition(keys)
+            var currPos = dir()
+
+            if (pos.x !== currPos.x || pos.y !== currPos.y) {
+                dir.set(pos)
+            }
+        })
+
+        return dir
     }
 }
 
