@@ -37,10 +37,16 @@ keyboard.keysDown(function (keys) {
 import { Observ } from 'observ'
 
 type KeyCode := Number
+type Direction = 'left' | 'right' | 'up' | 'down' | 'void'
+type Coord := {
+    x: Number,
+    y: Number,
+    lastPressed: Direction
+}
 
 frp-keyboard := () => {
-    arrows: Observ<{ x: Number, y: Number }>,
-    wasd: Observ<{ x: Number, y: Number }>,
+    arrows: Observ<Coord>,
+    wasd: Observ<Coord>,
     ctrl: Observ<Boolean>,
     shift: Observ<Boolean>,
     isDown: (keyCode: KeyCode) => Observ<Boolean>,
@@ -48,7 +54,7 @@ frp-keyboard := () => {
     lastPressed: Observ<keyCode: KeyCode>,
     directions: (
         up: KeyCode, down: KeyCode, left: KeyCode, right: KeyCode
-    ) => Observ<{ x: Number, y: Number }>
+    ) => Observ<Coord>
 }
 ```
 
@@ -73,6 +79,10 @@ keyboard.arrows(function (tuple) {
   console.log('x', tuple.x)
 })
 ```
+
+`keyboard.arrows` also has a `.lastPressed` property on the
+  returned co-ordinate so you can determine whether a diagonal
+  state of `{ x: 1, y: 1 }` was up, right or right, up
 
 #### `keyboard.wasd`
 
