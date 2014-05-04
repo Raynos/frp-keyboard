@@ -3,6 +3,8 @@ var value = require('observ');
 
 var Blurred = {};
 
+NativeKeyboard.Position = Position
+
 module.exports = NativeKeyboard;
 
 function NativeKeyboard(delegator) {
@@ -47,21 +49,26 @@ function NativeKeyboard(delegator) {
         function computePosition(keys) {
             var x = 0;
             var y = 0;
+            var lastPressed = 'void';
 
             for (var i = 0; i < keys.length; i++) {
                 var keyCode = keys[i];
                 if (keyCode === left) {
                     --x;
+                    lastPressed = 'left';
                 } else if (keyCode === right) {
                     ++x;
+                    lastPressed = 'right';
                 } else if (keyCode === up) {
                     ++y;
+                    lastPressed = 'up';
                 } else if (keyCode === down) {
                     --y;
+                    lastPressed = 'down';
                 }
             }
 
-            return new Position(x, y);
+            return new Position(x, y, lastPressed);
         }
 
         var dir = value(computePosition(keysDown()))
@@ -79,9 +86,10 @@ function NativeKeyboard(delegator) {
     }
 }
 
-function Position(x, y) {
+function Position(x, y, lastPressed) {
     this.x = x;
     this.y = y;
+    this.lastPressed = lastPressed
 }
 
 function KeysDown(down, up, blur) {

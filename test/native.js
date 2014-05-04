@@ -3,6 +3,7 @@ var setImmediate = require('timers').setImmediate;
 
 var dispatchEvent = require('./lib/dispatch-event.js');
 var Keyboard = require('../index.js');
+var Position = require('../native.js').Position;
 
 test('isDown for keyCode=50', function (assert) {
     var keyboard = Keyboard();
@@ -118,29 +119,29 @@ test('directions', function (assert) {
 
     var dirs = keyboard.directions(1, 2, 3, 4);
 
-    assert.deepEqual(dirs(), { x: 0, y: 0 });
+    assert.deepEqual(dirs(), new Position(0, 0, 'void'));
 
     dispatchEvent('keydown', { keyCode: 1 });
 
     setImmediate(function () {
-        assert.deepEqual(dirs(), { x: 0, y: 1 });
+        assert.deepEqual(dirs(), new Position(0, 1, 'up'));
 
         dispatchEvent('keyup', { keyCode: 1 });
         dispatchEvent('keydown', { keyCode: 2 });
 
         setImmediate(function () {
-            assert.deepEqual(dirs(), { x: 0, y: -1 });
+            assert.deepEqual(dirs(), new Position(0, -1, 'down'));
 
             dispatchEvent('keydown', { keyCode: 4 });
 
             setImmediate(function () {
-                assert.deepEqual(dirs(), { x: 1, y: -1 });
+                assert.deepEqual(dirs(), new Position(1, -1, 'right'));
 
                 dispatchEvent('keyup', { keyCode: 4 });
                 dispatchEvent('keyup', { keyCode: 2 });
 
                 setImmediate(function () {
-                    assert.deepEqual(dirs(), { x: 0, y: 0 });
+                    assert.deepEqual(dirs(), new Position(0, 0, 'void'));
 
                     assert.end();
                 });
