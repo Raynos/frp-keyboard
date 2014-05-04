@@ -20,6 +20,7 @@ function Keyboard(delegator) {
         isDown: native.isDown,
         keysDown: native.keysDown,
         lastPressed: native.lastPressed,
+        keyDown: native.keyDown,
         directions: native.directions,
         arrows: native.directions(
             ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT),
