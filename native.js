@@ -23,11 +23,18 @@ function NativeKeyboard(delegator) {
     });
 
     var keysDown = KeysDown(downEvents, upEvents, blurEvents);
+    var lastPressed = value(keysDown())
+
+    downEvents(function (keyCode) {
+        if (lastPressed() !== keyCode) {
+            lastPressed.set(keyCode)
+        }
+    })
 
     return {
         isDown: isDown,
         keysDown: keysDown,
-        lastPressed: downEvents,
+        lastPressed: lastPressed,
         directions: directions
     };
 
