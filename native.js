@@ -34,6 +34,7 @@ function NativeKeyboard(delegator) {
     return {
         isDown: isDown,
         keysDown: keysDown,
+        keyDown: downEvents,
         lastPressed: lastPressed,
         directions: directions
     };
